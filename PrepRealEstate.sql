@@ -18,4 +18,4 @@ GROUP BY
     p.SquareFootage, 
     r.AnnualRent
 
--- The above query can be used to populate the annual_rent_income and annual_expenses fields in RealEstateInvestment.py
+-- The above query can be used to populate the annual_rent_income and annual_expenses fields in RealEstateInv.py
