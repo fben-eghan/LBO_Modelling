@@ -1,2 +1,2 @@
-# PyPlay
-Playing around with packages and functions in Python
+# LBO_Modelling
+Coding a simple Leveraged Buyout Model.
