@@ -4,8 +4,28 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 class RealEstateInvestment:
+    """A class for calculating the probability of meeting a target IRR for a real estate investment."""
+    
     def __init__(self, p=1e6, e=0.25, r=0.06, lt=10, ap=25, agr=0.02, arg=0.02,
                  ecr=0.08, ih=5, irr=0.15, ri=5e4, ex=2.5e4, t=0.2):
+        """
+        Initializes a RealEstateInvestment object.
+        
+        Parameters:
+        p (float): Purchase price of the property
+        e (float): Equity investment as a percentage of the purchase price
+        r (float): Annual interest rate on the mortgage
+        lt (int): Length of the mortgage in years
+        ap (int): Amortization period of the mortgage in years
+        agr (float): Annual growth rate of rental income
+        arg (float): Annual growth rate of the resale value of the property
+        ecr (float): Expected capitalization rate of the property
+        ih (int): Holding period of the property in years
+        irr (float): Target internal rate of return
+        ri (float): Annual rental income from the property
+        ex (float): Annual property expenses
+        t (float): Marginal tax rate
+        """
         self.p, self.e, self.r, self.lt, self.ap, self.agr = p, e, r, lt, ap, agr
         self.arg, self.ecr, self.ih, self.irr, self.ri, self.ex, self.t = arg, ecr, ih, irr, ri, ex, t
         self.d, self.pmt, self.noi = None, None, None
@@ -14,7 +34,19 @@ class RealEstateInvestment:
         self.agr_dist, self.arg_dist, self.ecr_dist = None, None, None
         self.irr_dist = np.zeros(self.iters)
 
-    def calculate(self, num_sims):
+    def calculate(self, num_sims=10000, **kwargs):
+        """
+        Calculates the probability of meeting the target IRR using Monte Carlo simulation.
+        
+        Parameters:
+        num_sims (int): Number of simulations to run
+        **kwargs: Optional keyword arguments for class initialization
+        
+        Returns:
+        float: Probability of meeting the target IRR
+        """
+        for key, value in kwargs.items():
+            setattr(self, key, value)
         res = []
         for _ in range(num_sims):
             self.d, self.e = self.e * self.p, (1 - self.e) * self.p
