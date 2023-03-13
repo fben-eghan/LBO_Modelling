@@ -35,8 +35,46 @@ class RealEstateInvestment:
         self.exit_cap_rate_dist = norm(loc=exit_cap_rate, scale=exit_cap_rate*0.05)  # normal distribution for exit cap rate
         self.equity_IRR_dist = np.zeros(self.iterations)  # initialize array to store equity IRR results
 
-    def calculate(self):
-        for i in range(self.iterations):
-            # Generate random values for input parameters
-            purchase_price = self.purchase_price_dist.rvs()
-            annual_rent_income = self.annual
+    
+    def calculate(self, num_simulations):
+        results = []
+        for i in range(num_simulations):
+            # Calculate the debt and equity amounts
+            debt_amount = self.debt_ratio * self.purchase_price
+            equity_amount = self.purchase_price - debt_amount
+
+            # Calculate the debt service payments
+            interest_payment = self.interest_rate * debt_amount
+            principal_payment = np.pmt(self.interest_rate / 12, self.loan_term * 12, -debt_amount, 0)
+            debt_service_payment = interest_payment + principal_payment
+
+            # Calculate the annual cash flows
+            annual_debt_service = debt_service_payment * 12
+            annual_net_operating_income = self.annual_rent_income - self.annual_expenses
+            annual_cash_flow_before_tax = annual_net_operating_income - annual_debt_service
+            annual_cash_flow_after_tax = annual_cash_flow_before_tax * (1 - self.tax_rate)
+            
+            # Calculate the terminal value
+            terminal_value = annual_cash_flow_before_tax * (1 + self.annual_rent_growth_rate) / (self.exit_cap_rate - self.annual_rent_growth_rate)
+
+            # Calculate the equity IRR
+            cash_flows = [-(equity_amount)] + [annual_cash_flow_after_tax] * self.investment_horizon + [terminal_value]
+            equity_irr = np.irr(cash_flows)
+
+            # Determine whether the investment meets the minimum equity IRR threshold
+            if equity_irr >= self.equity_IRR_threshold:
+                results.append(1)
+            else:
+                results.append(0)
+
+        success_rate = sum(results) / num_simulations
+        return success_rate
+
+# Create an instance of the RealEstateInvestment class
+rei = RealEstateInvestment()
+
+# Call the calculate method with 10000 simulations and print the success rate
+num_simulations = 10000
+success_rate = rei.calculate(num_simulations)
+print(f"Success rate after {num_simulations} simulations: {success_rate:.2%}")
+
