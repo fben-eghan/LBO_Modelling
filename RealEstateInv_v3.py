@@ -47,7 +47,7 @@ class RealEstateInvestment:
         """
         for key, value in kwargs.items():
             setattr(self, key, value)
-        res = []
+        res = [] in
         for _ in range(num_sims):
             self.d, self.e = self.e * self.p, (1 - self.e) * self.p
             self.pmt = np.pmt(self.r / 12, self.lt * 12, -self.d, 0)
@@ -69,7 +69,7 @@ sns.set_style('whitegrid')
 fig, ax = plt.subplots(figsize=(8, 6))
 
 sns.histplot(results, ax=ax, bins=40, kde=True, stat='density',
-             color='tab:blue', alpha=0.8, line_kws={'linewidth': 2})
+color='tab:blue', alpha=0.8, line_kws={'linewidth': 2})
 sns.kdeplot(results, ax=ax, color='tab:orange', linewidth=3)
 
 ax.set_xlabel('IRR Probability', fontsize=14)
