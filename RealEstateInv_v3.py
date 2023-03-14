@@ -60,7 +60,7 @@ class RealEstateInvestment:
             res.append(1 if self.irr_dist[_] >= self.irr else 0)
         return sum(res) / num_sims
 
-# assuming you have already instantiated the RealEstateInvestment class and defined the calculate method
+#Create many instances of the RealEstateInvestment class
 
 num_sims = 10000
 results = [RealEstateInvestment().calculate(num_sims) for _ in range(num_sims)]
